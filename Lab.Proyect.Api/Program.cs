@@ -1,9 +1,17 @@
+using Lab.Project.Api.Profiles;
+using Lab.Project.Application.Services;
+using Lab.Project.Application.UsesCases.Product.Queris;
+using Lab.Project.Domain.Repositories;
+using Lab.Project.Infraestructure.Repositories;
+using Lab.Proyect.Api.Profiles;
 using Lab.Proyect.Application.Services;
 using Lab.Proyect.Domain.Repositories;
 using Lab.Proyect.Infraestructure.Data;
 using Lab.Proyect.Infraestructure.Repositories;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +30,25 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //Add Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepositories>();
-
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 //Add Services
-builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
+//Add AutoMapper    
+builder.Services.AddAutoMapper(typeof(ProductControllerProfile));
+builder.Services.AddAutoMapper(typeof(CustomerProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(OrderProfile).Assembly);
+
+
+//Add MediatR
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    config.RegisterServicesFromAssembly(typeof(ListCustomerQueries).Assembly);
+});
 
 
 var app = builder.Build();
