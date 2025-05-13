@@ -1,4 +1,5 @@
-﻿using Lab.Proyect.Domain.Entities;
+﻿using Lab.Project.Domain.Entities;
+using Lab.Proyect.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,11 @@ namespace Lab.Proyect.Infraestructure.Data
         {
         }
         public DbSet<Product> Products { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
 
     }
 }
